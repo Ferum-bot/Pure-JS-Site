@@ -9,3 +9,17 @@ body {
 .cross {
 
 }
+
+.horizontal-line {
+    height: 5px;
+    background: darkgrey;
+}
+
+.vertical-line {
+    width: 5px;
+    background: darkgrey;
+}
+
+.hidden {
+    visibility: hidden;
+}
