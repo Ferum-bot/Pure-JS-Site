@@ -2,6 +2,9 @@
 document.addEventListener('DOMContentLoaded', onApplicationInit)
 
 // Document elements providers
+const provideGameContainer = () => {
+    return document.querySelector('#game-container')
+}
 const provideGameGridContainer = () => {
     return document.querySelector('#game-grid-container')
 }
@@ -11,14 +14,19 @@ const provideGameInformationPanel = () => {
 const providePlayAgainButton = () => {
     return document.querySelector('#play-again')
 }
-const provideTitle = () => {
+const provideWinTitle = () => {
     return document.querySelector('#title')
+}
+const provideTurnTitle = () => {
+    return document.querySelector('#game-state-title')
 }
 
 // Constants
 const EMPTY = 'empty'
 const CROSS = 'cross'
 const NOUGHT = 'nought'
+
+const HIDDEN_CLASS = 'hidden'
 
 
 // State variables
@@ -34,6 +42,7 @@ let currentTurn = CROSS
 // Events callbacks controllers
 function onApplicationInit() {
     drawCurrentGameField()
+    drawCurrentTurn()
 
     const playAgainButton = providePlayAgainButton()
     playAgainButton.addEventListener('click', onPlayAgainClicked)
@@ -55,6 +64,11 @@ function onCellClicked(event) {
     if (currentTurn === CROSS) {
         setCross(x, y)
     }
+
+    const winner = getGameWinnerOrNull()
+    if (winner) {
+        drawPlayerWins(winner)
+    }
 }
 
 function onPlayAgainClicked() {
@@ -65,6 +79,74 @@ function onPlayAgainClicked() {
 
     clearPage()
     drawCurrentGameField()
+    drawCurrentTurn()
+}
+
+
+// Game controllers
+function getGameWinnerOrNull() {
+    let winner = EMPTY
+
+    // Check rows
+    for (let x = 0; x < 3; x++) {
+        if (gameField[x][0] === EMPTY) {
+            continue
+        }
+
+        const currentCell = gameField[x][0]
+        let isTheSame = true
+
+        for (let y = 0; y < 3; y++) {
+            if (currentCell !== gameField[x][y]) {
+                isTheSame = false
+                break
+            }
+        }
+
+        if (isTheSame) {
+            winner = gameField[x][0]
+            break
+        }
+    }
+
+    // Check columns
+    for (let y = 0; y < 3; y++) {
+        if (gameField[0][y] === EMPTY) {
+            continue
+        }
+
+        const currentCell = gameField[0][y]
+        let isTheSame = true
+
+        for (let x = 0; x < 3; x++) {
+            if (currentCell !== gameField[x][y]) {
+                isTheSame = false
+                break
+            }
+        }
+
+        if (isTheSame) {
+            winner = gameField[0][y];
+            break
+        }
+    }
+
+    const firstDiagonal = gameField[0][0] === gameField[1][1] && gameField[0][0] === gameField[2][2]
+    const secondDiagonal = gameField[0][2] === gameField[1][1] && gameField[0][2] === gameField[2][0]
+
+    // Check diagonals
+    if (firstDiagonal && gameField[0][0] !== EMPTY) {
+        winner = gameField[0][0]
+    }
+    if (secondDiagonal && gameField[0][2] !== EMPTY) {
+        winner = gameField[0][2]
+    }
+
+    if (winner !== EMPTY) {
+        return winner
+    } else {
+        return null
+    }
 }
 
 function setNought(x, y) {
@@ -74,6 +156,7 @@ function setNought(x, y) {
     gameField[x][y] = NOUGHT
     currentTurn = CROSS
     drawCurrentGameField()
+    drawCurrentTurn()
 }
 
 function setCross(x, y) {
@@ -83,6 +166,7 @@ function setCross(x, y) {
     gameField[x][y] = CROSS
     currentTurn = NOUGHT
     drawCurrentGameField()
+    drawCurrentTurn()
 }
 
 
@@ -90,7 +174,7 @@ function setCross(x, y) {
 function drawCurrentGameField() {
     clearPage()
 
-    const container = provideGameGridContainer()
+    const cellsContainer = provideGameGridContainer()
     for (let x = 0; x < 3; x++) {
         for (let y = 0; y < 3; y++) {
             const cell = createGameCell(x, y)
@@ -103,11 +187,14 @@ function drawCurrentGameField() {
                 addNought(cell)
             }
 
-            container.appendChild(cell)
+            cellsContainer.appendChild(cell)
         }
     }
 
-    container.classList.remove('hidden')
+    cellsContainer.classList.remove(HIDDEN_CLASS)
+
+    const gameContainer = provideGameContainer()
+    gameContainer.classList.remove(HIDDEN_CLASS)
 }
 
 function drawBorders(element, x, y) {
@@ -212,14 +299,28 @@ function drawBorders(element, x, y) {
 }
 
 function addCross(element) {
-
+    const image = document.createElement('img')
+    image.src = './static/close.png'
+    image.classList.add('cross')
+    element.appendChild(image)
 }
 
 function addNought(element) {
+    const image = document.createElement('img')
+    image.src = './static/dry-clean.png'
+    image.classList.add('nought')
+    element.appendChild(image)
+}
 
+function drawCurrentTurn() {
+    const turnTitle = provideTurnTitle()
+    turnTitle.classList.remove(HIDDEN_CLASS)
+    turnTitle.innerHTML = `Current turn: ${currentTurn}`
 }
 
 function drawPlayerWins(player) {
+    clearPage()
+
     let text = ''
     if (player === CROSS) {
         text = 'Cross player wins!'
@@ -228,22 +329,31 @@ function drawPlayerWins(player) {
         text = 'Nought player wins!'
     }
 
-    const title = provideTitle()
+    const title = provideWinTitle()
+    const panelContainer = provideGameInformationPanel()
+
     title.innerHTML = text
+    panelContainer.classList.remove(HIDDEN_CLASS)
 }
 
 function clearPage() {
     const cellsContainer = provideGameGridContainer()
     const panelContainer = provideGameInformationPanel()
+    const gameTurnTitle = provideTurnTitle()
+    const gameContainer = provideGameContainer()
 
     while (cellsContainer.firstChild) {
         cellsContainer.removeChild(cellsContainer.lastChild)
     }
 
-    panelContainer.classList.add('hidden')
-    cellsContainer.classList.add('hidden')
+    panelContainer.classList.add(HIDDEN_CLASS)
+    cellsContainer.classList.add(HIDDEN_CLASS)
+    gameTurnTitle.classList.add(HIDDEN_CLASS)
+    gameContainer.classList.add(HIDDEN_CLASS)
 }
 
+
+// Support and util functions
 function createGameCell(x, y) {
     const element = document.createElement('div')
     element.classList.add('game-cell')

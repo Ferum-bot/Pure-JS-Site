@@ -10,14 +10,29 @@ body {
     background: cornflowerblue;
 }
 
+.game-container {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 15%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.game-state-title {
+    color: black;
+    font-size: 25px;
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+    text-decoration: none;
+}
+
 .game-grid-container {
     display: grid;
     grid-template-columns: 100px 100px 100px;
     grid-template-rows: 100px 100px 100px;
 
-    margin-top: 15%;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-top: 40px;
 }
 
 .game-cell {
@@ -28,12 +43,14 @@ body {
     align-content: center;
 }
 
-.zero {
-
+.nought {
+    width: 80px;
+    height: 80px;
 }
 
 .cross {
-
+    width: 80px;
+    height: 80px;
 }
 
 .left-cell-border {
