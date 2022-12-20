@@ -195,9 +195,9 @@ function clearPage() {
     while (cellsContainer.firstChild) {
         cellsContainer.removeChild(cellsContainer.lastChild)
     }
-    while (panelContainer.firstChild) {
-        panelContainer.removeChild(panelContainer.lastChild)
-    }
+    // while (panelContainer.firstChild) {
+    //     panelContainer.removeChild(panelContainer.lastChild)
+    // }
 }
 
 function createGameCell(x, y) {
