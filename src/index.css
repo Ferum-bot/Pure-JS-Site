@@ -12,10 +12,12 @@ body {
 
 .game-grid-container {
     display: grid;
-    grid-template-columns: 80px 80px 80px;
-    grid-template-rows: 80px 80px 80px;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px;
 
     margin-top: 15%;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .game-cell {
@@ -35,27 +37,47 @@ body {
 }
 
 .left-cell-border {
-    border-left-width: 3px;
+    border-left-width: 2px;
     border-left-color: darkgrey;
+    border-style: solid;
 }
 
 .top-cell-border {
-    border-top-width: 3px;
+    border-top-width: 2px;
     border-top-color: darkgrey;
+    border-style: solid;
 }
 
 .right-cell-border {
-    border-right-width: 3px;
+    border-right-width: 2px;
     border-right-color: darkgrey;
+    border-style: solid;
 }
 
 .bottom-cell-border {
-    border-bottom-width: 3px;
+    border-bottom-width: 2px;
     border-bottom-color: darkgrey;
+    border-style: solid;
+}
+
+.left-cell-remove-border {
+    border-left-width: 0;
+}
+
+.top-cell-remove-border {
+    border-top-width: 0;
+}
+
+.right-cell-remove-border {
+    border-right-width: 0;
+}
+
+.bottom-cell-remove-border {
+    border-bottom-width: 0;
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .game-information-panel {

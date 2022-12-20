@@ -8,6 +8,12 @@ const provideGameGridContainer = () => {
 const provideGameInformationPanel = () => {
     return document.querySelector('#game-information-panel')
 }
+const providePlayAgainButton = () => {
+    return document.querySelector('#play-again')
+}
+const provideTitle = () => {
+    return document.querySelector('#title')
+}
 
 // Constants
 const EMPTY = 'empty'
@@ -28,6 +34,9 @@ let currentTurn = CROSS
 // Events callbacks controllers
 function onApplicationInit() {
     drawCurrentGameField()
+
+    const playAgainButton = providePlayAgainButton()
+    playAgainButton.addEventListener('click', onPlayAgainClicked)
 }
 
 function onCellClicked(event) {
@@ -97,6 +106,8 @@ function drawCurrentGameField() {
             container.appendChild(cell)
         }
     }
+
+    container.classList.remove('hidden')
 }
 
 function drawBorders(element, x, y) {
@@ -122,19 +133,41 @@ function drawBorders(element, x, y) {
         }
     }
 
+    const removeBorder = (side) => {
+        switch (side) {
+            case LEFT:
+                element.classList.add('left-cell-remove-border')
+                break
+            case TOP:
+                element.classList.add('top-cell-remove-border')
+                break
+            case RIGHT:
+                element.classList.add('right-cell-remove-border')
+                break
+            case BOTTOM:
+                element.classList.add('bottom-cell-remove-border')
+                break
+        }
+    }
+
     // First row
     if (x === 0 && y === 0) {
         drawBorder(RIGHT)
         drawBorder(BOTTOM)
+        removeBorder(LEFT)
+        removeBorder(TOP)
     }
     if (x === 0 && y === 1) {
         drawBorder(LEFT)
         drawBorder(BOTTOM)
         drawBorder(RIGHT)
+        removeBorder(TOP)
     }
     if (x === 0 && y === 2) {
         drawBorder(LEFT)
         drawBorder(BOTTOM)
+        removeBorder(TOP)
+        removeBorder(RIGHT)
     }
 
     // Second row
@@ -142,6 +175,7 @@ function drawBorders(element, x, y) {
         drawBorder(TOP)
         drawBorder(RIGHT)
         drawBorder(BOTTOM)
+        removeBorder(LEFT)
     }
     if (x === 1 && y === 1) {
         drawBorder(LEFT)
@@ -153,21 +187,27 @@ function drawBorders(element, x, y) {
         drawBorder(LEFT)
         drawBorder(TOP)
         drawBorder(BOTTOM)
+        removeBorder(RIGHT)
     }
 
     // Third row
     if (x === 2 && y === 0) {
         drawBorder(TOP)
         drawBorder(RIGHT)
+        removeBorder(LEFT)
+        removeBorder(BOTTOM)
     }
     if (x === 2 && y === 1) {
         drawBorder(TOP)
         drawBorder(LEFT)
         drawBorder(RIGHT)
+        removeBorder(BOTTOM)
     }
     if (x === 2 && y === 2) {
         drawBorder(TOP)
         drawBorder(LEFT)
+        removeBorder(RIGHT)
+        removeBorder(BOTTOM)
     }
 }
 
@@ -180,12 +220,16 @@ function addNought(element) {
 }
 
 function drawPlayerWins(player) {
+    let text = ''
     if (player === CROSS) {
-
+        text = 'Cross player wins!'
     }
     if (player === NOUGHT) {
-
+        text = 'Nought player wins!'
     }
+
+    const title = provideTitle()
+    title.innerHTML = text
 }
 
 function clearPage() {
@@ -195,9 +239,9 @@ function clearPage() {
     while (cellsContainer.firstChild) {
         cellsContainer.removeChild(cellsContainer.lastChild)
     }
-    // while (panelContainer.firstChild) {
-    //     panelContainer.removeChild(panelContainer.lastChild)
-    // }
+
+    panelContainer.classList.add('hidden')
+    cellsContainer.classList.add('hidden')
 }
 
 function createGameCell(x, y) {
