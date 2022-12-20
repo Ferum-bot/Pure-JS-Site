@@ -4,6 +4,8 @@ Tic-Tac-Toe Web game written by pure JavaScript.
 No Frameworks, no `package.json` and no any external files or libraries in project.
 Just pure JavaScript, HTML and CSS.
 
+Available on https://ferum-bot.github.io/Tic-Tac-Toe/
+
 ## Features:
 * No Frameworks
 * No NPM
